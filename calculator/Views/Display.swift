@@ -1,5 +1,5 @@
 //
-//  TopHalf.swift
+//  Display.swift
 //  calculator
 //
 //  Created by Louis Andrew on 11.11.21.
@@ -7,23 +7,21 @@
 
 import SwiftUI
 
-struct TopHalf: View {
-
-    @State var value: String = "##"
-    @State var operations: [String] = ["12", "+", "324"]
-
-    var primaryColor: Color
+struct Display: View {
+    var operations: String
+    var value: String
+    
     var body: some View {
         VStack {
             VStack {
-                Text(join(self.operations))
+                Text(operations)
                     .fontWeight(.bold)
                     .font(.system(size: 24))
                     .foregroundColor(AppColors.text)
                     .padding(.trailing, 16)
                     .padding(.bottom, 2)
 
-                Text(self.value)
+                Text(value)
                     .fontWeight(.light)
                     .font(.system(size: 64))
                     .foregroundColor(.white)
@@ -33,16 +31,13 @@ struct TopHalf: View {
             .padding(.trailing, 32)
         }
         .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
-        .background(primaryColor)
+        .background(AppColors.primary)
     }
+
 }
 
-struct TopHalf_Previews: PreviewProvider {
+struct Display_Previews: PreviewProvider {
     static var previews: some View {
-        TopHalf(primaryColor: AppColors.primary)
+        Display(operations: "1 + 2", value: "3")
     }
-}
-
-func join(_ array: [String]) -> String {
-    return array.joined(separator: " ")
 }
