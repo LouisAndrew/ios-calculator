@@ -37,9 +37,9 @@ struct ContentView: View {
                                         if self.inputValue.contains(".") {
                                            return
                                         }
-                                    } else {
-                                        self.inputValue.append(column)
-                                    }
+                                    } 
+                                    self.inputValue = "\(self.inputValue)\(column)"
+                                    self.displayValue = self.inputValue
                                 } else {
                                     if column == "=" {
                                         if inputValue != "" {
@@ -50,9 +50,11 @@ struct ContentView: View {
                                             )
                                             self.inputValue = ""
                                             self.op = nil
+                                            self.displayValue = "\(self.value)"
                                         } else {
                                             self.value = 0
                                             self.op = nil
+                                            self.displayValue = "0"
                                         }
                                     } else {
                                         if self.op != nil {
@@ -62,13 +64,14 @@ struct ContentView: View {
                                                 op: self.op
                                             )
                                             self.inputValue = ""
+                                            self.displayValue = "\(self.value)"
                                         } else {
                                             self.value = asNumber(self.inputValue)
+                                            self.inputValue = ""
                                         }
                                         self.op = column
                                     }
                                 }
-                                self.displayValue = "\(self.value)"
                             }, label: {
                                 Text(column)
                                     .fontWeight(.heavy)
@@ -76,7 +79,7 @@ struct ContentView: View {
                                     .foregroundColor(getForegroundColor(column))
                                     .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
                             })
-                            .background(getBackgroundColor(column))
+                            .background(getBackgroundColor(column, self.op))
                             .padding(.all, 4)
                             .cornerRadius(20)
                         }
@@ -99,8 +102,12 @@ struct ContentView_Previews: PreviewProvider {
     }
 } 
 
-func getBackgroundColor(_ columnValue: String) -> Color {
+func getBackgroundColor(_ columnValue: String, _ op: String?) -> Color {
     if !isOperand(columnValue) {
+        if op == columnValue || columnValue == "=" {
+            return AppColors.accent
+        } 
+
         return AppColors.text
     }
     
