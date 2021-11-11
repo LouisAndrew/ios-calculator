@@ -8,9 +8,16 @@
 import SwiftUI
 
 struct ContentView: View {
+
+    let textContent = "Stay Hungry. Stay Foolish."
+
     var body: some View {
-        Text("Hello, world!")
-            .padding()
+        VStack {
+            TopHalf(primaryColor: AppColors.primary)
+            BottomHalf(primaryColor: AppColors.primary, secondaryColor: AppColors.secondary)
+        }
+        .background(AppColors.secondary)
+        .edgesIgnoringSafeArea(.all)
     }
 }
 
@@ -18,4 +25,4 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
-}
+} 

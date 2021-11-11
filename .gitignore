@@ -1,0 +1,6 @@
+## GCC Patch
+/*.gcno
+
+## XCode patch
+calculator.xcodeproj/
+calculator.xcodeproj/project.pbxproj
