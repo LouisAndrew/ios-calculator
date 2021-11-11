@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-let operators = ["/", "x", "-", "+", "="]
-
 struct ContentView: View {
     let rows = [
         ["7", "8", "9", "/"],
@@ -16,13 +14,17 @@ struct ContentView: View {
         ["1", "2", "3", "-"],
         [".", "0", "=", "+"]
     ]
-    
-    @State var value: String = "##"
+
+    @State var inputValue: String = ""
+
+    @State var op: String? = nil
+    @State var value: Float = 0
+    @State var displayValue: String = "##"
     @State var operations: [String] = ["12", "+", "324"]
 
     var body: some View {
         VStack {
-            Display(operations: join(self.operations), value: self.value)
+            Display(operations: join(self.operations), value: self.displayValue)
             
              VStack {
                 ForEach(rows, id: \.self) { row in
@@ -30,11 +32,47 @@ struct ContentView: View {
                         Spacer(minLength: 13)
                         ForEach(row, id: \.self) { column in
                             Button(action: {
-                                //Action to be added later.
+                                if isOperand(column) {
+                                    if column == "." {
+                                        if self.inputValue.contains(".") {
+                                           return
+                                        }
+                                    } else {
+                                        self.inputValue.append(column)
+                                    }
+                                } else {
+                                    if column == "=" {
+                                        if inputValue != "" {
+                                            self.value = compute(
+                                                first: self.value,
+                                                second: asNumber(self.inputValue),
+                                                op: self.op
+                                            )
+                                            self.inputValue = ""
+                                            self.op = nil
+                                        } else {
+                                            self.value = 0
+                                            self.op = nil
+                                        }
+                                    } else {
+                                        if self.op != nil {
+                                            self.value = compute(
+                                                first: self.value,
+                                                second: asNumber(self.inputValue),
+                                                op: self.op
+                                            )
+                                            self.inputValue = ""
+                                        } else {
+                                            self.value = asNumber(self.inputValue)
+                                        }
+                                        self.op = column
+                                    }
+                                }
+                                self.displayValue = "\(self.value)"
                             }, label: {
                                 Text(column)
                                     .fontWeight(.heavy)
-                                    .font(.system(size: 32))
+                                    .font(.system(size: getFontSize(column)))
                                     .foregroundColor(getForegroundColor(column))
                                     .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
                             })
@@ -61,12 +99,8 @@ struct ContentView_Previews: PreviewProvider {
     }
 } 
 
-func isOperator(_ value: String) -> Bool {
-    return operators.contains(value)
-}
-
 func getBackgroundColor(_ columnValue: String) -> Color {
-    if isOperator(columnValue) {
+    if !isOperand(columnValue) {
         return AppColors.text
     }
     
@@ -74,13 +108,17 @@ func getBackgroundColor(_ columnValue: String) -> Color {
 }
 
 func getForegroundColor(_ columnValue: String) -> Color {
-    if isOperator(columnValue) {
+    if !isOperand(columnValue) {
         return AppColors.primary
     }
     
     return AppColors.text
 }
 
-func join(_ array: [String]) -> String {
-    return array.joined(separator: " ")
+func getFontSize(_ columnValue: String) -> CGFloat {
+    if !isOperand(columnValue) {
+        return 24
+    }
+
+    return 28
 }
