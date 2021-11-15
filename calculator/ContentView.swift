@@ -27,6 +27,25 @@ struct ContentView: View {
             Display(operations: join(self.operations), value: self.displayValue)
             
              VStack {
+                      
+                HStack {
+                    Button(action: {
+                        // TODO: 
+                        self.displayValue = "12"
+                    }, label: {
+                        Text("Input Roman")
+                            .font(.system(size: 20))                        
+                            .foregroundColor(AppColors.text)
+                            .padding(.all, 8)
+                            .padding(.leading, 16)
+                            .padding(.trailing, 16)                        
+                    })
+                        .background(AppColors.primary)
+                        .frame(minHeight: 20, idealHeight: 25, alignment: .leading)
+                        .cornerRadius(16)
+                }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+        
                 ForEach(rows, id: \.self) { row in
                     HStack(alignment: .top, spacing: 0) {
                         Spacer(minLength: 13)
@@ -74,7 +93,6 @@ struct ContentView: View {
                                 }
                             }, label: {
                                 Text(column)
-                                    .fontWeight(.heavy)
                                     .font(.system(size: getFontSize(column)))
                                     .foregroundColor(getForegroundColor(column))
                                     .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
@@ -85,11 +103,12 @@ struct ContentView: View {
                         }
                     }
                 }
+
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
             .padding(16)
-            .padding(.top, 32)
-            .padding(.bottom, 32)
+            .padding(.bottom, 20)
+            .padding(.top, 20)
             .background(AppColors.secondary)
         }
         .background(AppColors.secondary)
@@ -104,21 +123,13 @@ struct ContentView_Previews: PreviewProvider {
 
 func getBackgroundColor(_ columnValue: String, _ op: String?) -> Color {
     if !isOperand(columnValue) {
-        if op == columnValue || columnValue == "=" {
-            return AppColors.accent
-        } 
-
-        return AppColors.text
+        return AppColors.primary
     }
     
     return AppColors.secondary
 }
 
 func getForegroundColor(_ columnValue: String) -> Color {
-    if !isOperand(columnValue) {
-        return AppColors.primary
-    }
-    
     return AppColors.text
 }
 
