@@ -62,18 +62,25 @@ struct ContentView: View {
                                 } else {
                                     if column == "=" {
                                         if inputValue != "" {
+                                            let second = asNumber(self.inputValue)
+                                            let first = self.value
                                             self.value = compute(
-                                                first: self.value,
-                                                second: asNumber(self.inputValue),
+                                                first: first,
+                                                second: second, 
                                                 op: self.op
                                             )
+                                            
+                                        self.operations = ["\(first)", "\(self.op!)", "\(second)"]
+
                                             self.inputValue = ""
                                             self.op = nil
-                                            self.displayValue = "\(self.value)"
+                                            self.displayValue = "\(asNumber(floatInput: self.value))"
                                         } else {
+                                            // Clear input
                                             self.value = 0
                                             self.op = nil
                                             self.displayValue = "0"
+                                            self.operations = []
                                         }
                                     } else {
                                         if self.op != nil {
@@ -94,7 +101,7 @@ struct ContentView: View {
                             }, label: {
                                 Text(column)
                                     .font(.system(size: getFontSize(column)))
-                                    .foregroundColor(getForegroundColor(column))
+                                    .foregroundColor(getForegroundColor(column, self.op))
                                     .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
                             })
                             .background(getBackgroundColor(column, self.op))
@@ -123,13 +130,20 @@ struct ContentView_Previews: PreviewProvider {
 
 func getBackgroundColor(_ columnValue: String, _ op: String?) -> Color {
     if !isOperand(columnValue) {
+        if op == columnValue {
+            return AppColors.accent
+        }
         return AppColors.primary
     }
-    
+
     return AppColors.secondary
 }
 
-func getForegroundColor(_ columnValue: String) -> Color {
+func getForegroundColor(_ columnValue: String, _ op: String?) -> Color {
+    if op == columnValue {
+        return AppColors.primary
+    }
+
     return AppColors.text
 }
 

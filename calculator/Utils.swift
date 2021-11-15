@@ -39,3 +39,8 @@ func compute(first: Float, second: Float, op: String?) -> Float {
 func asNumber(_ value: String) -> Float {
     return (value as NSString).floatValue
 }
+
+/// Function to transform a float number to a displayable string
+func asDisplay(_ value: Float) -> String {
+    return ""
+}
