@@ -24,11 +24,11 @@ func compute(first: Float, second: Float, op: String?) -> Float {
 
     switch op {
         case "/":
-            return first / second
+            return round(first / second)
         case "x":
-            return first * second
+            return round(first * second)
         case "-":
-            return first - second
+            return (first - second)
         case "+":
             return first + second
         default:
@@ -36,11 +36,22 @@ func compute(first: Float, second: Float, op: String?) -> Float {
     }
 }
 
+func round(_ value: Float) -> Float {
+    if value.truncatingRemainder(dividingBy: 1) != 0 {
+        return (value * 1000).rounded() / 1000
+    }
+
+    return value
+}
+
 func asNumber(_ value: String) -> Float {
     return (value as NSString).floatValue
 }
 
-/// Function to transform a float number to a displayable string
 func asDisplay(_ value: Float) -> String {
-    return ""
+    if value.truncatingRemainder(dividingBy: 1) != 0 {
+        return "\(value)"
+    }
+    
+    return String(format: "%.0f", value)
 }

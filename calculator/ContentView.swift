@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let nullInputIdentifier = "#"
+
 struct ContentView: View {
     let rows = [
         ["7", "8", "9", "/"],
@@ -19,8 +21,8 @@ struct ContentView: View {
 
     @State var op: String? = nil
     @State var value: Float = 0
-    @State var displayValue: String = "##"
-    @State var operations: [String] = ["12", "+", "324"]
+    @State var displayValue: String = nullInputIdentifier
+    @State var operations: [String] = []
 
     var body: some View {
         VStack {
@@ -53,15 +55,19 @@ struct ContentView: View {
                             Button(action: {
                                 if isOperand(column) {
                                     if column == "." {
+                                        // Ignore if the current input is already a decimal number
                                         if self.inputValue.contains(".") {
                                            return
                                         }
                                     } 
+
+                                    // Append comma to the current input
                                     self.inputValue = "\(self.inputValue)\(column)"
                                     self.displayValue = self.inputValue
                                 } else {
                                     if column == "=" {
-                                        if inputValue != "" {
+                                        if op != nil {
+                                            // Compute the operation
                                             let second = asNumber(self.inputValue)
                                             let first = self.value
                                             self.value = compute(
@@ -70,30 +76,41 @@ struct ContentView: View {
                                                 op: self.op
                                             )
                                             
-                                        self.operations = ["\(first)", "\(self.op!)", "\(second)"]
-
-                                            self.inputValue = ""
+                                            // Display operations
+                                            self.operations = [asDisplay(first), "\(self.op ?? "")", asDisplay(second)]
+                                            self.inputValue = "\(self.value)"
                                             self.op = nil
-                                            self.displayValue = "\(asNumber(floatInput: self.value))"
+                                            self.displayValue = "\(asDisplay(self.value))" // Display the result
                                         } else {
+
                                             // Clear input
                                             self.value = 0
                                             self.op = nil
-                                            self.displayValue = "0"
+                                            self.inputValue = ""
+                                            self.displayValue = nullInputIdentifier
                                             self.operations = []
                                         }
                                     } else {
                                         if self.op != nil {
+                                            // Compute result and then save the operator
+                                            let first = self.value
+                                            let second = asNumber(self.inputValue)
+
                                             self.value = compute(
-                                                first: self.value,
-                                                second: asNumber(self.inputValue),
+                                                first: first,
+                                                second: second,
                                                 op: self.op
                                             )
+
+                                            self.operations = [asDisplay(first), "\(self.op!)", asDisplay(second)]
                                             self.inputValue = ""
-                                            self.displayValue = "\(self.value)"
+                                            self.displayValue = "\(asDisplay(self.value))"
                                         } else {
+                                            // Save the input to be the current value and save the operator
                                             self.value = asNumber(self.inputValue)
                                             self.inputValue = ""
+                                            self.displayValue = nullInputIdentifier
+                                            self.operations = [asDisplay(self.value)]
                                         }
                                         self.op = column
                                     }

@@ -20,11 +20,15 @@ struct Display: View {
                     .foregroundColor(AppColors.text)
                     .padding(.trailing, 16)
                     .padding(.bottom, 2)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
 
                 Text(value)
                     .fontWeight(.light)
                     .font(.system(size: 64))
-                    .foregroundColor(.white)
+                    .foregroundColor(getForegroundColor(self.value))
+                    .padding(.trailing, 16)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .bottomTrailing)
             .padding(.bottom, 32)
@@ -40,4 +44,12 @@ struct Display_Previews: PreviewProvider {
     static var previews: some View {
         Display(operations: "1 + 2", value: "3")
     }
+}
+
+func getForegroundColor(_ value: String) -> Color {
+    if value == nullInputIdentifier {
+        return AppColors.secondaryDarker
+    }
+
+    return .white
 }
