@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+let nullInputIdentifier = "#"
+
 struct ContentView: View {
     let rows = [
         ["7", "8", "9", "/"],
@@ -19,14 +21,33 @@ struct ContentView: View {
 
     @State var op: String? = nil
     @State var value: Float = 0
-    @State var displayValue: String = "##"
-    @State var operations: [String] = ["12", "+", "324"]
+    @State var displayValue: String = nullInputIdentifier
+    @State var operations: [String] = []
 
     var body: some View {
         VStack {
             Display(operations: join(self.operations), value: self.displayValue)
             
              VStack {
+                      
+                HStack {
+                    Button(action: {
+                        // TODO: 
+                        self.displayValue = "12"
+                    }, label: {
+                        Text("Input Roman")
+                            .font(.system(size: 20))                        
+                            .foregroundColor(AppColors.text)
+                            .padding(.all, 8)
+                            .padding(.leading, 16)
+                            .padding(.trailing, 16)                        
+                    })
+                        .background(AppColors.primary)
+                        .frame(minHeight: 20, idealHeight: 25, alignment: .leading)
+                        .cornerRadius(16)
+                }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+        
                 ForEach(rows, id: \.self) { row in
                     HStack(alignment: .top, spacing: 0) {
                         Spacer(minLength: 13)
@@ -34,49 +55,70 @@ struct ContentView: View {
                             Button(action: {
                                 if isOperand(column) {
                                     if column == "." {
+                                        // Ignore if the current input is already a decimal number
                                         if self.inputValue.contains(".") {
                                            return
                                         }
                                     } 
+
+                                    // Append comma to the current input
                                     self.inputValue = "\(self.inputValue)\(column)"
                                     self.displayValue = self.inputValue
                                 } else {
                                     if column == "=" {
-                                        if inputValue != "" {
+                                        if op != nil {
+                                            // Compute the operation
+                                            let second = asNumber(self.inputValue)
+                                            let first = self.value
                                             self.value = compute(
-                                                first: self.value,
-                                                second: asNumber(self.inputValue),
+                                                first: first,
+                                                second: second, 
                                                 op: self.op
                                             )
-                                            self.inputValue = ""
+                                            
+                                            // Display operations
+                                            self.operations = [asDisplay(first), "\(self.op ?? "")", asDisplay(second)]
+                                            self.inputValue = "\(self.value)"
                                             self.op = nil
-                                            self.displayValue = "\(self.value)"
+                                            self.displayValue = "\(asDisplay(self.value))" // Display the result
                                         } else {
+
+                                            // Clear input
                                             self.value = 0
                                             self.op = nil
-                                            self.displayValue = "0"
+                                            self.inputValue = ""
+                                            self.displayValue = nullInputIdentifier
+                                            self.operations = []
                                         }
                                     } else {
                                         if self.op != nil {
+                                            // Compute result and then save the operator
+                                            let first = self.value
+                                            let second = asNumber(self.inputValue)
+
                                             self.value = compute(
-                                                first: self.value,
-                                                second: asNumber(self.inputValue),
+                                                first: first,
+                                                second: second,
                                                 op: self.op
                                             )
+
+                                            self.operations = [asDisplay(first), "\(self.op!)", asDisplay(second)]
                                             self.inputValue = ""
-                                            self.displayValue = "\(self.value)"
+                                            self.displayValue = "\(asDisplay(self.value))"
                                         } else {
+                                            // Save the input to be the current value and save the operator
                                             self.value = asNumber(self.inputValue)
                                             self.inputValue = ""
+                                            self.displayValue = nullInputIdentifier
+                                            self.operations = [asDisplay(self.value)]
                                         }
                                         self.op = column
                                     }
                                 }
                             }, label: {
                                 Text(column)
-                                    .fontWeight(.heavy)
                                     .font(.system(size: getFontSize(column)))
-                                    .foregroundColor(getForegroundColor(column))
+                                    .foregroundColor(getForegroundColor(column, self.op))
                                     .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
                             })
                             .background(getBackgroundColor(column, self.op))
@@ -85,11 +127,12 @@ struct ContentView: View {
                         }
                     }
                 }
+
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
             .padding(16)
-            .padding(.top, 32)
-            .padding(.bottom, 32)
+            .padding(.bottom, 20)
+            .padding(.top, 20)
             .background(AppColors.secondary)
         }
         .background(AppColors.secondary)
@@ -104,21 +147,20 @@ struct ContentView_Previews: PreviewProvider {
 
 func getBackgroundColor(_ columnValue: String, _ op: String?) -> Color {
     if !isOperand(columnValue) {
-        if op == columnValue || columnValue == "=" {
+        if op == columnValue {
             return AppColors.accent
-        } 
-
-        return AppColors.text
+        }
+        return AppColors.primary
     }
-    
+
     return AppColors.secondary
 }
 
-func getForegroundColor(_ columnValue: String) -> Color {
-    if !isOperand(columnValue) {
+func getForegroundColor(_ columnValue: String, _ op: String?) -> Color {
+    if op == columnValue {
         return AppColors.primary
     }
-    
+
     return AppColors.text
 }
 
