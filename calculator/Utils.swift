@@ -55,3 +55,7 @@ func asDisplay(_ value: Float) -> String {
     
     return String(format: "%.0f", value)
 }
+
+func validateRoman(_ value: String) -> Bool {
+    return true
+}
