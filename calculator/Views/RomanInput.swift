@@ -30,7 +30,7 @@ struct RomanInput: View {
 
                     TextField("Roman numeral", text: $inputValue)
                         .onChange(of: self.inputValue, perform: { newValue in
-                            self.isValidRoman = validateRoman(newValue)
+                            self.isValidRoman = validateRoman(newValue.uppercased())
                         })
                          .font(.system(size: 24))
                          .textCase(.uppercase)
@@ -55,7 +55,9 @@ struct RomanInput: View {
                 HStack {
 
                     Button(action: {
-                        // 
+                        if isValidRoman {
+                            self.action(self.inputValue)
+                        }
                     }, label: {
                         Text("Confirm")
                             .font(.system(size: 20))

@@ -57,5 +57,7 @@ func asDisplay(_ value: Float) -> String {
 }
 
 func validateRoman(_ value: String) -> Bool {
-    return value == "AAA"
+    let pattern = "^M{0,3}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})"
+    let predicate = NSPredicate(format: "self MATCHES [c] %@", pattern)
+    return predicate.evaluate(with: value)
 }
