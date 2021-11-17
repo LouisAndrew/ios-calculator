@@ -23,6 +23,7 @@ struct ContentView: View {
     @State var value: Float = 0
     @State var displayValue: String = nullInputIdentifier
     @State var operations: [String] = []
+    @State var isRomanInputDisplayed = false
 
     var body: some View {
         VStack {
@@ -32,10 +33,9 @@ struct ContentView: View {
                       
                 HStack {
                     Button(action: {
-                        // TODO: 
-                        self.displayValue = "12"
+                        self.isRomanInputDisplayed.toggle()
                     }, label: {
-                        Text("Input Roman")
+                        Text(self.isRomanInputDisplayed ? "Display default view" :  "Display roman input")
                             .font(.system(size: 20))                        
                             .foregroundColor(AppColors.text)
                             .padding(.all, 8)
@@ -48,86 +48,97 @@ struct ContentView: View {
                 }
                     .frame(maxWidth: .infinity, alignment: .leading)
         
-                ForEach(rows, id: \.self) { row in
-                    HStack(alignment: .top, spacing: 0) {
-                        Spacer(minLength: 13)
-                        ForEach(row, id: \.self) { column in
-                            Button(action: {
-                                if isOperand(column) {
-                                    if column == "." {
-                                        // Ignore if the current input is already a decimal number
-                                        if self.inputValue.contains(".") {
-                                           return
+                if isRomanInputDisplayed  {
+                    RomanInput(action: { romanInput in
+                        self.inputValue = romanInput
+                        self.displayValue = romanInput.uppercased()
+                        self.isRomanInputDisplayed.toggle()
+                    })
+                } else {
+                    ForEach(rows, id: \.self) { row in
+                        HStack(alignment: .top, spacing: 0) {
+                            Spacer(minLength: 13)
+                            ForEach(row, id: \.self) { column in
+                                Button(action: {
+                                    if isOperand(column) {
+                                        if !self.inputValue.isEmpty && validateRoman(self.inputValue) {
+                                            // todo: handle roman + number input
+                                            return
                                         }
-                                    } 
 
-                                    // Append comma to the current input
-                                    self.inputValue = "\(self.inputValue)\(column)"
-                                    self.displayValue = self.inputValue
-                                } else {
-                                    if column == "=" {
-                                        if op != nil {
-                                            // Compute the operation
-                                            let second = asNumber(self.inputValue)
-                                            let first = self.value
-                                            self.value = compute(
-                                                first: first,
-                                                second: second, 
-                                                op: self.op
-                                            )
-                                            
-                                            // Display operations
-                                            self.operations = [asDisplay(first), "\(self.op ?? "")", asDisplay(second)]
-                                            self.inputValue = "\(self.value)"
-                                            self.op = nil
-                                            self.displayValue = "\(asDisplay(self.value))" // Display the result
-                                        } else {
+                                        if column == "." {
+                                            // Ignore if the current input is already a decimal number
+                                            if self.inputValue.contains(".") {
+                                            return
+                                            }
+                                        } 
 
-                                            // Clear input
-                                            self.value = 0
-                                            self.op = nil
-                                            self.inputValue = ""
-                                            self.displayValue = nullInputIdentifier
-                                            self.operations = []
-                                        }
+                                        self.inputValue = "\(self.inputValue)\(column)"
+                                        self.displayValue = self.inputValue
                                     } else {
-                                        if self.op != nil {
-                                            // Compute result and then save the operator
-                                            let first = self.value
-                                            let second = asNumber(self.inputValue)
+                                        if column == "=" {
+                                            if op != nil {
+                                                // Compute the operation
+                                                let second = self.inputValue
+                                                let first = self.value
+                                                self.value = compute(
+                                                    first: first,
+                                                    second: asNumber(second), 
+                                                    op: self.op
+                                                )
+                                                
+                                                // Display operations
+                                                self.operations = [asDisplay(first), "\(self.op ?? "")", second]
+                                                self.inputValue = "\(self.value)"
+                                                self.op = nil
+                                                self.displayValue = "\(asDisplay(self.value))" // Display the result
+                                            } else {
 
-                                            self.value = compute(
-                                                first: first,
-                                                second: second,
-                                                op: self.op
-                                            )
-
-                                            self.operations = [asDisplay(first), "\(self.op!)", asDisplay(second)]
-                                            self.inputValue = ""
-                                            self.displayValue = "\(asDisplay(self.value))"
+                                                // Clear input
+                                                self.value = 0
+                                                self.op = nil
+                                                self.inputValue = ""
+                                                self.displayValue = nullInputIdentifier
+                                                self.operations = []
+                                            }
                                         } else {
-                                            // Save the input to be the current value and save the operator
-                                            self.value = asNumber(self.inputValue)
-                                            self.inputValue = ""
-                                            self.displayValue = nullInputIdentifier
-                                            self.operations = [asDisplay(self.value)]
+                                            if self.op != nil {
+                                                // Compute result and then save the operator
+                                                let first = self.value
+                                                let second = self.inputValue
+
+                                                self.value = compute(
+                                                    first: first,
+                                                    second: asNumber(second),
+                                                    op: self.op
+                                                )
+
+                                                self.operations = [asDisplay(first), "\(self.op!)", second]
+                                                self.inputValue = ""
+                                                self.displayValue = "\(asDisplay(self.value))"
+                                            } else {
+                                                // Save the input to be the current value and save the operator
+                                                self.operations = [self.inputValue]
+                                                self.value = asNumber(self.inputValue)
+                                                self.inputValue = ""
+                                                self.displayValue = nullInputIdentifier
+                                            }
+                                            self.op = column
                                         }
-                                        self.op = column
                                     }
-                                }
-                            }, label: {
-                                Text(column)
-                                    .font(.system(size: getFontSize(column)))
-                                    .foregroundColor(getForegroundColor(column, self.op))
-                                    .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
-                            })
-                            .background(getBackgroundColor(column, self.op))
-                            .padding(.all, 4)
-                            .cornerRadius(20)
+                                }, label: {
+                                    Text(column)
+                                        .font(.system(size: getFontSize(column)))
+                                        .foregroundColor(getForegroundColor(column, self.op))
+                                        .frame(idealWidth: 100, maxWidth: .infinity, idealHeight: 100, maxHeight: .infinity, alignment: .center)
+                                })
+                                .background(getBackgroundColor(column, self.op))
+                                .padding(.all, 4)
+                                .cornerRadius(20)
+                            }
                         }
                     }
                 }
-
             }
             .frame(minWidth: 0, maxWidth: .infinity, minHeight: 0, maxHeight: .infinity, alignment: .topLeading)
             .padding(16)
