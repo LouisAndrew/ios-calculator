@@ -57,6 +57,7 @@ struct RomanInput: View {
                     Button(action: {
                         if isValidRoman {
                             self.action(self.inputValue)
+                            self.inputValue = ""
                         }
                     }, label: {
                         Text("Confirm")
