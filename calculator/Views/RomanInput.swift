@@ -10,7 +10,7 @@ import SwiftUI
 struct RomanInput: View {
     public var action: (String) -> ()
 
-    @State var isInvalidRoman: Bool = false
+    @State var isValidRoman: Bool = true
     @State var inputValue: String = ""
     
     var body: some View {
@@ -21,24 +21,41 @@ struct RomanInput: View {
                     .font(.system(size: 24))
                     .foregroundColor(AppColors.text)
                     .frame(maxWidth: .infinity, alignment: .leading)
-
-                 TextField("Roman numeral", text: $inputValue)
-                     .textCase(.uppercase)
-                     .foregroundColor(.white)
-                     .padding(.top, 8)
-                     .padding(.bottom, 20)
-
                 
+                ZStack {
+
+                    RoundedRectangle(cornerRadius: 5)
+                        .fill(AppColors.primary)
+                        .frame(height: 48)
+
+                    TextField("Roman numeral", text: $inputValue)
+                        .onChange(of: self.inputValue, perform: { newValue in
+                            self.isValidRoman = validateRoman(newValue)
+                        })
+                         .font(.system(size: 24))
+                         .textCase(.uppercase)
+                         .foregroundColor(.white)
+                         .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+
+                }
+                    .padding(.top, 12)
+                    .padding(.bottom, 6)
+
+                if !self.inputValue.isEmpty {
+                    let textContent = self.isValidRoman ? "Input valid" : "!! Input value is not a roman numeral"
+                    let textColor = self.isValidRoman ? AppColors.text : Color.red
+                    
+                    Text(textContent)
+                        .font(.system(size: 16))
+                        .foregroundColor(textColor)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+
+                }
                 
                 HStack {
 
                     Button(action: {
-                        let valid = validateRoman(self.inputValue)
-                        if valid {
-                            self.action(self.inputValue)
-                        } else {
-                            self.isInvalidRoman = true
-                        }
+                        // 
                     }, label: {
                         Text("Confirm")
                             .font(.system(size: 20))
@@ -51,6 +68,7 @@ struct RomanInput: View {
                         .frame(idealHeight: 25, alignment: .leading)
                         .cornerRadius(16)
                 }
+                    .padding(.top, 6)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
              }

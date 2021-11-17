@@ -57,5 +57,5 @@ func asDisplay(_ value: Float) -> String {
 }
 
 func validateRoman(_ value: String) -> Bool {
-    return true
+    return value == "AAA"
 }
