@@ -21,18 +21,18 @@ func compute(first: Float, second: Float, op: String?) -> Float {
     if op == nil {
         return first
     }
-
+    
     switch op {
-        case "/":
-            return round(first / second)
-        case "x":
-            return round(first * second)
-        case "-":
-            return (first - second)
-        case "+":
-            return first + second
-        default:
-            return first
+    case "/":
+        return round(first / second)
+    case "x":
+        return round(first * second)
+    case "-":
+        return (first - second)
+    case "+":
+        return first + second
+    default:
+        return first
     }
 }
 
@@ -40,7 +40,7 @@ func round(_ value: Float) -> Float {
     if value.truncatingRemainder(dividingBy: 1) != 0 {
         return (value * 1000).rounded() / 1000
     }
-
+    
     return value
 }
 
@@ -48,7 +48,7 @@ func asNumber(_ value: String) -> Float {
     if !value.isEmpty && validateRoman(value) {
         return romanToNumber(value.uppercased())
     }
-
+    
     return (value as NSString).floatValue
 }
 
