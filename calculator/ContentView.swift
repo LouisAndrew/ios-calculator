@@ -21,7 +21,9 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            Display(operations: join(self.operations), value: self.displayValue)
+            if !isRomanInputDisplayed {
+                Display(operations: join(self.operations), value: self.displayValue)
+            }
             
             VStack {
                 

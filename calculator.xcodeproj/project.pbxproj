@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D326592D273D66EB00CDDBDD /* AppColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D326592C273D66EB00CDDBDD /* AppColors.swift */; };
+		D326592F273D7A8C00CDDBDD /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = D326592E273D7A8C00CDDBDD /* Display.swift */; };
+		D37874CC273D99DE00D0A2CE /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = D37874CB273D99DE00D0A2CE /* Utils.swift */; };
+		D3BE68292746885600FC3CED /* NumberInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BE68282746885600FC3CED /* NumberInput.swift */; };
 		D3D7FDCD273D579400C8300F /* calculatorApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D7FDCC273D579400C8300F /* calculatorApp.swift */; };
 		D3D7FDCF273D579400C8300F /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D7FDCE273D579400C8300F /* ContentView.swift */; };
 		D3D7FDD1273D579600C8300F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D3D7FDD0273D579600C8300F /* Assets.xcassets */; };
@@ -14,6 +18,7 @@
 		D3D7FDDE273D579600C8300F /* calculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D7FDDD273D579600C8300F /* calculatorTests.swift */; };
 		D3D7FDE8273D579600C8300F /* calculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D7FDE7273D579600C8300F /* calculatorUITests.swift */; };
 		D3D7FDEA273D579600C8300F /* calculatorUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D7FDE9273D579600C8300F /* calculatorUITestsLaunchTests.swift */; };
+		D3FD7AA92742A9D600F6EE3C /* RomanInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3FD7AA82742A9D600F6EE3C /* RomanInput.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D326592C273D66EB00CDDBDD /* AppColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppColors.swift; path = calculator/Constants/AppColors.swift; sourceTree = "<group>"; };
+		D326592E273D7A8C00CDDBDD /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Display.swift; path = calculator/Views/Display.swift; sourceTree = "<group>"; };
+		D37874CB273D99DE00D0A2CE /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		D3BE68282746885600FC3CED /* NumberInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NumberInput.swift; path = Views/NumberInput.swift; sourceTree = "<group>"; };
 		D3D7FDC9273D579400C8300F /* calculator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = calculator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D7FDCC273D579400C8300F /* calculatorApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculatorApp.swift; sourceTree = "<group>"; };
 		D3D7FDCE273D579400C8300F /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +53,7 @@
 		D3D7FDE3273D579600C8300F /* calculatorUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = calculatorUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3D7FDE7273D579600C8300F /* calculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculatorUITests.swift; sourceTree = "<group>"; };
 		D3D7FDE9273D579600C8300F /* calculatorUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = calculatorUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D3FD7AA82742A9D600F6EE3C /* RomanInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RomanInput.swift; path = calculator/Views/RomanInput.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +84,9 @@
 		D3D7FDC0273D579400C8300F = {
 			isa = PBXGroup;
 			children = (
+				D3FD7AA82742A9D600F6EE3C /* RomanInput.swift */,
+				D326592C273D66EB00CDDBDD /* AppColors.swift */,
+				D326592E273D7A8C00CDDBDD /* Display.swift */,
 				D3D7FDCB273D579400C8300F /* calculator */,
 				D3D7FDDC273D579600C8300F /* calculatorTests */,
 				D3D7FDE6273D579600C8300F /* calculatorUITests */,
@@ -96,6 +109,8 @@
 			children = (
 				D3D7FDCC273D579400C8300F /* calculatorApp.swift */,
 				D3D7FDCE273D579400C8300F /* ContentView.swift */,
+				D3BE68282746885600FC3CED /* NumberInput.swift */,
+				D37874CB273D99DE00D0A2CE /* Utils.swift */,
 				D3D7FDD0273D579600C8300F /* Assets.xcassets */,
 				D3D7FDD2273D579600C8300F /* Preview Content */,
 			);
@@ -257,8 +272,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D37874CC273D99DE00D0A2CE /* Utils.swift in Sources */,
 				D3D7FDCF273D579400C8300F /* ContentView.swift in Sources */,
 				D3D7FDCD273D579400C8300F /* calculatorApp.swift in Sources */,
+				D326592D273D66EB00CDDBDD /* AppColors.swift in Sources */,
+				D3FD7AA92742A9D600F6EE3C /* RomanInput.swift in Sources */,
+				D3BE68292746885600FC3CED /* NumberInput.swift in Sources */,
+				D326592F273D7A8C00CDDBDD /* Display.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
